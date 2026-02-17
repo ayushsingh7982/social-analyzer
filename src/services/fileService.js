@@ -28,15 +28,15 @@ function cleanText(text) {
 }
 
 async function extractTextFromFile(file) {
-  const { mimetype, path } = file;
+  const { mimetype, buffer } = file;
 
   try {
     let text = '';
     
     if (mimetype === 'application/pdf') {
-      text = await extractTextFromPDF(path);
+      text = await extractTextFromPDF(buffer);
     } else if (mimetype.startsWith('image/')) {
-      text = await extractTextFromImage(path);
+      text = await extractTextFromImage(buffer);
     } else {
       throw new Error(`Unsupported file type: ${mimetype}`);
     }

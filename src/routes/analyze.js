@@ -1,24 +1,13 @@
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
 const { extractTextFromFile } = require('../services/fileService');
 const { analyzeText } = require('../services/aiService');
 
 const router = express.Router();
 
-// Configure multer storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
+// Configure multer with memory storage
 const upload = multer({ 
-  storage: storage,
+  storage: multer.memoryStorage(),
   limits: {
     fileSize: 5 * 1024 * 1024 // 5MB limit
   }
@@ -56,10 +45,9 @@ router.post('/analyze', (req, res, next) => {
 
   try {
     console.log('Uploaded file info:');
-    console.log('Filename:', req.file.filename);
     console.log('Original name:', req.file.originalname);
+    console.log('Mimetype:', req.file.mimetype);
     console.log('Size:', req.file.size, 'bytes');
-    console.log('Path:', req.file.path);
     
     const extractedText = await extractTextFromFile(req.file);
     console.log('\nExtracted text:');

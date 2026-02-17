@@ -1,126 +1,253 @@
-# Social Media Content Analyzer
+# 📊 Social Media Content Analyzer
 
-A web application that analyzes screenshots or PDFs of social media posts. The system extracts text using OCR, evaluates engagement quality using AI, and provides actionable suggestions and hashtags.
+> Upload a screenshot of a post → extract text → predict audience reaction → get improvement suggestions
 
----
-
-## Features
-
-* Upload image or PDF of a social media post
-* Automatic text extraction (OCR + PDF parsing)
-* AI-based sentiment and engagement analysis
-* Readability evaluation
-* Improvement suggestions
-* Recommended hashtags
-* Graceful handling of unreadable or short text
-* File size safety limits
+A lightweight AI + OCR powered web app that evaluates social media posts for sentiment, engagement potential and optimization tips.
 
 ---
 
-## System Flow
+## 🚀 Live Demo
 
-1. User uploads screenshot or PDF
-2. Server extracts text from file
-3. Text is cleaned and validated
-4. AI analyzes the content
-5. Structured results are rendered on a dashboard
+Add your deployed link here:
 
 ```
-Upload → OCR/PDF → Clean Text → AI Analysis → Result Page
+https://social-analyzer-4yqd.onrender.com/
 ```
 
 ---
 
-## Tech Stack
+## ✨ What This App Does
+
+1. Upload a screenshot (Instagram, Twitter/X, LinkedIn etc.)
+2. OCR extracts text from the image/PDF
+3. AI analyzes the content
+4. You receive:
+
+   * Audience sentiment
+   * Engagement score
+   * Readability level
+   * Growth suggestions
+   * Recommended hashtags
+
+---
+
+## 🧠 Core Capabilities
+
+| Feature               | Description                              |
+| --------------------- | ---------------------------------------- |
+| OCR Extraction        | Reads text from images & PDFs            |
+| Sentiment Detection   | Positive / Neutral / Negative perception |
+| Engagement Prediction | Estimates audience interaction potential |
+| Content Feedback      | Actionable improvement tips              |
+| Hashtag Generation    | Relevant discoverability tags            |
+| Fallback Handling     | Graceful handling of low‑quality text    |
+
+---
+
+## 🏗 Tech Stack
 
 ### Backend
 
 * Node.js
 * Express.js
-* Multer (file uploads)
-* Tesseract OCR
-* PDF parsing libraries
-* OpenAI API (structured analysis)
+* Multer (uploads)
+* pdf-parse
+* Tesseract.js (OCR)
 
 ### Frontend
 
-* EJS templates
-* Tailwind CSS
+* EJS Templates
+* TailwindCSS UI
+
+### AI
+
+* External AI API (text analysis + structured JSON response)
+
+### Deployment
+
+* Render
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
-src/
- ├── routes/
- │    └── analyze.js
- ├── services/
- │    ├── fileService.js
- │    └── aiService.js
- ├── views/
- │    ├── index.ejs
- │    ├── result.ejs
- │    └── error.ejs
- └── app.js
-
-uploads/
-.env
-README.md
+social-analyzer/
+│
+├── src/
+│   ├── app.js
+│   ├── routes/
+│   │   └── analyze.js
+│   ├── services/
+│   │   ├── ocrService.js
+│   │   └── aiService.js
+│   ├── views/
+│   │   ├── index.ejs
+│   │   └── result.ejs
+│   └── public/
+│
+├── uploads/
+├── .env
+├── package.json
+└── README.md
 ```
 
 ---
 
-## Environment Setup
+## ⚙️ Local Setup
 
-Create a `.env` file in the root directory:
+### 1. Clone
+
+```
+git clone https://github.com/yourusername/social-analyzer.git
+cd social-analyzer
+```
+
+### 2. Install
+
+```
+npm install
+```
+
+### 3. Environment Variables
+
+Create `.env`
 
 ```
 AI_API_KEY=your_api_key_here
 PORT=3000
 ```
 
----
-
-## Run Locally
+### 4. Run
 
 ```
-npm install
 npm run dev
 ```
 
-Then open:
-
-[http://localhost:3000](http://localhost:3000)
+Open → [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## Validation & Safety
+## 🌐 Deployment (Render)
 
-* Maximum upload size: 5MB
-* Short or unreadable text is skipped safely
-* Structured JSON validation prevents broken responses
-* Global error handler prevents server crashes
+**Build Command**
 
----
+```
+npm install
+```
 
-## Limitations
+**Start Command**
 
-* OCR accuracy depends on image quality
-* Complex memes may produce partial text
-* AI suggestions are heuristic guidance, not guaranteed performance
+```
+npm start
+```
 
----
+Add Environment Variable:
 
-## Future Improvements
-
-* Support video thumbnails
-* Multi-language analysis
-* Historical performance comparison
-* Batch upload processing
+```
+AI_API_KEY = your_api_key_here
+```
 
 ---
 
-## License
+## 🔍 Example AI Output
 
-For educational and demonstration purposes only.
+```json
+{
+  "sentiment": "positive",
+  "engagement_score": 7,
+  "readability_level": "easy",
+  "improvement_suggestions": [
+    "Engage with followers",
+    "Post consistently",
+    "Use visuals"
+  ],
+  "recommended_hashtags": [
+    "branding",
+    "socialmedia",
+    "engagement"
+  ]
+}
+```
+
+---
+
+## ⚠️ Limitations
+
+* OCR accuracy depends on image clarity
+* Very short text cannot be analyzed
+* Uploaded files are temporary
+
+---
+
+## 🔮 Future Improvements
+
+* Multi‑language support
+* Analytics dashboard
+* Save history
+* Platform‑specific suggestions
+
+---
+
+## 👨‍💻 Author
+
+Ayush Singh
+
+---
+
+## 📜 License
+
+Educational / Demonstration project
+
+
+---
+
+## Deployment on Render
+
+### Prerequisites
+
+1. Push your code to GitHub
+2. Sign up for a free account at [Render](https://render.com)
+3. Have your OpenAI API key ready
+
+### Deployment Steps
+
+1. **Connect Repository**
+   - Go to Render Dashboard
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repository
+
+2. **Configure Service**
+   - Name: `social-content-analyzer` (or your choice)
+   - Environment: `Node`
+   - Build Command: `npm install`
+   - Start Command: `npm start`
+
+3. **Set Environment Variables**
+   - Add `AI_API_KEY` with your OpenAI API key
+   - Add `AI_API_URL` = `https://api.openai.com/v1/chat/completions`
+   - Add `NODE_ENV` = `production`
+
+4. **Deploy**
+   - Click "Create Web Service"
+   - Wait for deployment to complete
+   - Your app will be live at `https://your-app-name.onrender.com`
+
+### Using render.yaml (Alternative)
+
+The project includes a `render.yaml` file for automatic configuration:
+
+1. Push code to GitHub
+2. In Render Dashboard, select "New +" → "Blueprint"
+3. Connect repository
+4. Render will auto-detect `render.yaml` and configure everything
+5. Just add your `AI_API_KEY` in the environment variables
+
+### Important Notes
+
+- The app uses **memory-based file storage** (no disk writes)
+- Works seamlessly on Render's ephemeral filesystem
+- Free tier may have cold starts (first request takes longer)
+- Uploads are limited to 5MB
+
+---

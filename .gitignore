@@ -6,9 +6,6 @@ node_modules/
 .env.local
 .env.*.local
 
-# Uploads folder
-uploads/
-
 # Logs
 logs/
 *.log
@@ -30,4 +27,3 @@ build/
 
 # Temporary files
 *.tmp
-*-temp.png
