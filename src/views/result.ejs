@@ -8,19 +8,74 @@
 </head>
 <body class="bg-gray-100 min-h-screen p-4 sm:p-8">
 
+<!-- Header -->
+<div class="text-center mb-6 sm:mb-8">
+  <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">AI Social Media Content Analyzer</h1>
+  <p class="text-sm sm:text-base text-gray-600">Understand how your post will perform before publishing</p>
+</div>
+
 <%
   const sentiment = analysis?.sentiment || 'neutral';
   const score = Math.max(0, Math.min(100, analysis?.engagement_score || 0));
   const suggestions = analysis?.improvement_suggestions || [];
   const hashtags = analysis?.recommended_hashtags || [];
+  
+  // Compute sentiment text
+  const sentimentText = sentiment.charAt(0).toUpperCase() + sentiment.slice(1) + ' audience perception';
+  
+  // Compute engagement label
+  let engagementLabel = '';
+  if (score >= 0 && score < 30) {
+    engagementLabel = 'Poor reach potential';
+  } else if (score >= 30 && score < 60) {
+    engagementLabel = 'Average performance';
+  } else if (score >= 60 && score < 80) {
+    engagementLabel = 'Good engagement';
+  } else {
+    engagementLabel = 'High viral potential';
+  }
+  
+  // Categorize suggestions using round-robin
+  const contentQuality = [];
+  const engagementStrategy = [];
+  const growthStrategy = [];
+  
+  suggestions.forEach((suggestion, index) => {
+    const category = index % 3;
+    if (category === 0) {
+      contentQuality.push(suggestion);
+    } else if (category === 1) {
+      engagementStrategy.push(suggestion);
+    } else {
+      growthStrategy.push(suggestion);
+    }
+  });
 %>
 
-<% if (error || !analysis) { %>
+<% if (error) { %>
 
   <div class="max-w-xl mx-auto bg-white shadow-lg rounded-xl p-6 sm:p-8 text-center mt-10 sm:mt-20">
     <h1 class="text-lg sm:text-xl font-semibold mb-2">No readable content found</h1>
-    <p class="text-sm sm:text-base text-gray-500"><%= error || 'Try uploading a clearer image or a text-based PDF.' %></p>
+    <p class="text-sm sm:text-base text-gray-500"><%= error %></p>
     <a href="/" class="inline-block mt-4 text-blue-600 hover:underline">Go back</a>
+  </div>
+
+<% } else if (!analysis) { %>
+
+  <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4 text-center mt-10 sm:mt-20">
+    <h1 class="text-lg sm:text-xl font-semibold mb-2">We could not detect enough readable text in this post</h1>
+    <p class="text-sm sm:text-base text-gray-500 mb-4">Try a clearer image or higher resolution screenshot.</p>
+    
+    <% if (extractedText && extractedText !== 'No readable text detected') { %>
+      <div class="text-left">
+        <h2 class="font-semibold text-sm sm:text-base mb-2">Extracted Text:</h2>
+        <div class="bg-gray-100 rounded-lg p-4">
+          <p class="text-sm text-gray-700 leading-relaxed"><%= extractedText %></p>
+        </div>
+      </div>
+    <% } %>
+    
+    <a href="/" class="inline-block mt-4 text-blue-600 hover:underline">Try another file</a>
   </div>
 
 <% } else { %>
@@ -34,7 +89,7 @@
       <span class="px-4 py-2 rounded-full text-white text-sm sm:text-base
         <%= sentiment === 'positive' ? 'bg-green-500' : 
             sentiment === 'negative' ? 'bg-red-500' : 'bg-gray-500' %>">
-        <%= sentiment %>
+        <%= sentimentText %>
       </span>
     </div>
 
@@ -47,19 +102,51 @@
         </div>
       </div>
       <p class="text-sm text-gray-500 mt-1"><%= score %>%</p>
+      <p class="text-xs text-gray-400 mt-1"><%= engagementLabel %></p>
     </div>
 
     <!-- Suggestions -->
     <div>
-      <h2 class="font-semibold text-base sm:text-lg mb-2">Suggestions</h2>
+      <h2 class="font-semibold text-base sm:text-lg mb-3">Suggestions</h2>
       <% if (suggestions.length === 0) { %>
         <p class="text-sm sm:text-base text-gray-500">No suggestions available</p>
       <% } else { %>
-        <ul class="list-disc pl-5 space-y-1">
-          <% suggestions.forEach(s => { %>
-            <li class="text-sm sm:text-base"><%= s %></li>
-          <% }) %>
-        </ul>
+        <div class="space-y-4">
+          
+          <% if (contentQuality.length > 0) { %>
+            <div>
+              <h3 class="font-semibold text-sm sm:text-base mb-2">Content Quality</h3>
+              <ul class="list-disc pl-5 space-y-1">
+                <% contentQuality.forEach(s => { %>
+                  <li class="text-sm sm:text-base"><%= s %></li>
+                <% }) %>
+              </ul>
+            </div>
+          <% } %>
+          
+          <% if (engagementStrategy.length > 0) { %>
+            <div>
+              <h3 class="font-semibold text-sm sm:text-base mb-2">Engagement Strategy</h3>
+              <ul class="list-disc pl-5 space-y-1">
+                <% engagementStrategy.forEach(s => { %>
+                  <li class="text-sm sm:text-base"><%= s %></li>
+                <% }) %>
+              </ul>
+            </div>
+          <% } %>
+          
+          <% if (growthStrategy.length > 0) { %>
+            <div>
+              <h3 class="font-semibold text-sm sm:text-base mb-2">Growth Strategy</h3>
+              <ul class="list-disc pl-5 space-y-1">
+                <% growthStrategy.forEach(s => { %>
+                  <li class="text-sm sm:text-base"><%= s %></li>
+                <% }) %>
+              </ul>
+            </div>
+          <% } %>
+          
+        </div>
       <% } %>
     </div>
 
@@ -70,12 +157,27 @@
         <p class="text-sm sm:text-base text-gray-500">No hashtags generated</p>
       <% } else { %>
         <div class="flex flex-wrap gap-2">
-          <% hashtags.forEach(tag => { %>
-            <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">#<%= tag %></span>
+          <% hashtags.forEach((tag, index) => { %>
+            <span class="<%= index < 2 ? 'bg-black text-white' : 'bg-gray-200 text-black' %> px-3 py-1 rounded-full text-sm">#<%= tag %></span>
           <% }) %>
         </div>
       <% } %>
     </div>
+
+    <!-- Extracted Caption -->
+    <% if (extractedText && extractedText !== 'No readable text detected') { %>
+      <div>
+        <h2 class="font-semibold text-base sm:text-lg mb-2">Extracted Caption</h2>
+        <div class="bg-gray-100 rounded-lg p-4">
+          <p class="text-sm text-gray-700 leading-relaxed"><%= extractedText %></p>
+        </div>
+        <p class="text-xs text-gray-400 mt-2">Detected <%= extractedText.length %> characters</p>
+      </div>
+    <% } %>
+
+    <% if (processingTime) { %>
+      <p class="text-xs text-gray-400 text-center mt-4">Analyzed in <%= processingTime %> ms</p>
+    <% } %>
 
     <a href="/" class="block text-center mt-4 text-blue-600 hover:underline text-sm sm:text-base">Analyze another post</a>
 

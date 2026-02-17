@@ -47,6 +47,8 @@ router.post('/analyze', (req, res, next) => {
     next();
   });
 }, async (req, res) => {
+  const startTime = Date.now();
+  
   if (!req.file) {
     console.log('No file uploaded');
     return res.redirect('/');
@@ -65,9 +67,11 @@ router.post('/analyze', (req, res, next) => {
     
     // Check if text extraction was successful
     if (!extractedText || extractedText === 'No readable text detected') {
+      const processingTime = Date.now() - startTime;
       return res.render('result', {
         error: 'No readable text could be extracted from the file',
-        analysis: null
+        analysis: null,
+        processingTime
       });
     }
     
@@ -76,16 +80,20 @@ router.post('/analyze', (req, res, next) => {
     console.log('\nAI Analysis:');
     console.log(JSON.stringify(analysis, null, 2));
     
+    const processingTime = Date.now() - startTime;
     res.render('result', {
       error: null,
       analysis: analysis,
-      extractedText: extractedText
+      extractedText: extractedText,
+      processingTime
     });
   } catch (error) {
     console.error('Error processing file:', error.message);
+    const processingTime = Date.now() - startTime;
     res.render('result', {
       error: error.message,
-      analysis: null
+      analysis: null,
+      processingTime
     });
   }
 });
