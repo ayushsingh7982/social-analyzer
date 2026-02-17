@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="#111827"></rect>
+
+  <!-- Chat bubble -->
+  <path d="M14 18c0-4 3-7 7-7h22c4 0 7 3 7 7v12c0 4-3 7-7 7H29l-9 7v-7h-1c-4 0-7-3-7-7V18z" fill="#38bdf8"></path>
+
+  <!-- Engagement arrow -->
+  <path d="M32 36l7-7 5 5V24h4v16H32v-4z" fill="#22c55e"></path>
+</svg>

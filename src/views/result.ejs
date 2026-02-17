@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Analysis Result</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8">
+
+<%
+  const sentiment = analysis?.sentiment || 'neutral';
+  const score = Math.max(0, Math.min(100, analysis?.engagement_score || 0));
+  const suggestions = analysis?.improvement_suggestions || [];
+  const hashtags = analysis?.recommended_hashtags || [];
+%>
+
+<% if (error || !analysis) { %>
+
+  <div class="max-w-xl mx-auto bg-white shadow-lg rounded-xl p-6 sm:p-8 text-center mt-10 sm:mt-20">
+    <h1 class="text-lg sm:text-xl font-semibold mb-2">No readable content found</h1>
+    <p class="text-sm sm:text-base text-gray-500"><%= error || 'Try uploading a clearer image or a text-based PDF.' %></p>
+    <a href="/" class="inline-block mt-4 text-blue-600 hover:underline">Go back</a>
+  </div>
+
+<% } else { %>
+
+  <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-4 sm:p-6 space-y-4 sm:space-y-6">
+
+    <h1 class="text-xl sm:text-2xl font-bold text-center">Analysis Result</h1>
+
+    <!-- Sentiment -->
+    <div class="text-center">
+      <span class="px-4 py-2 rounded-full text-white text-sm sm:text-base
+        <%= sentiment === 'positive' ? 'bg-green-500' : 
+            sentiment === 'negative' ? 'bg-red-500' : 'bg-gray-500' %>">
+        <%= sentiment %>
+      </span>
+    </div>
+
+    <!-- Engagement Score -->
+    <div>
+      <h2 class="font-semibold text-base sm:text-lg mb-2">Engagement Score</h2>
+      <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+        <div class="bg-black h-4 rounded-full transition-all duration-500"
+             style="width: <%= score %>%;">
+        </div>
+      </div>
+      <p class="text-sm text-gray-500 mt-1"><%= score %>%</p>
+    </div>
+
+    <!-- Suggestions -->
+    <div>
+      <h2 class="font-semibold text-base sm:text-lg mb-2">Suggestions</h2>
+      <% if (suggestions.length === 0) { %>
+        <p class="text-sm sm:text-base text-gray-500">No suggestions available</p>
+      <% } else { %>
+        <ul class="list-disc pl-5 space-y-1">
+          <% suggestions.forEach(s => { %>
+            <li class="text-sm sm:text-base"><%= s %></li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </div>
+
+    <!-- Hashtags -->
+    <div>
+      <h2 class="font-semibold text-base sm:text-lg mb-2">Hashtags</h2>
+      <% if (hashtags.length === 0) { %>
+        <p class="text-sm sm:text-base text-gray-500">No hashtags generated</p>
+      <% } else { %>
+        <div class="flex flex-wrap gap-2">
+          <% hashtags.forEach(tag => { %>
+            <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">#<%= tag %></span>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <a href="/" class="block text-center mt-4 text-blue-600 hover:underline text-sm sm:text-base">Analyze another post</a>
+
+  </div>
+
+<% } %>
+
+</body>
+</html>

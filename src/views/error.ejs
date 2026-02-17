@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Error</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+  <div class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 sm:p-8 text-center">
+    <div class="text-red-500 text-5xl mb-4">⚠️</div>
+    <h1 class="text-xl sm:text-2xl font-bold mb-2">Oops! Something went wrong</h1>
+    <p class="text-gray-600 mb-6"><%= message %></p>
+    
+    <% if (error && error.stack) { %>
+      <details class="text-left bg-gray-50 p-4 rounded mb-4">
+        <summary class="cursor-pointer font-semibold">Error Details</summary>
+        <pre class="text-xs mt-2 overflow-auto"><%= error.stack %></pre>
+      </details>
+    <% } %>
+    
+    <a href="/" class="inline-block bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition">
+      Go Home
+    </a>
+  </div>
+
+</body>
+</html>
